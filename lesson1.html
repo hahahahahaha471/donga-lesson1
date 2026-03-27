@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>1과 The Future Is in Our Hands</title>
+<style>
+:root{--bg:#f5f5f7;--card:#fff;--primary:#6c63ff;--primary-light:#ede9ff;--text:#1a1a2e;--sub:#6b7280;--border:#e5e7eb;--green:#10b981;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+.nav{display:flex;align-items:center;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.nav-back{font-size:22px;cursor:pointer;margin-right:12px;color:var(--primary);}
+.nav-title{font-size:15px;font-weight:700;}
+
+.hero{background:linear-gradient(135deg,#6c63ff 0%,#8b83ff 100%);padding:28px 20px 24px;color:#fff;text-align:center;}
+.hero-num{font-size:13px;opacity:.8;margin-bottom:4px;}
+.hero-title{font-size:22px;font-weight:900;margin-bottom:6px;}
+.hero-sub{font-size:12px;opacity:.75;}
+.hero-tags{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap;}
+.hero-tag{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 12px;font-size:12px;}
+
+.section{max-width:480px;margin:0 auto;padding:20px 16px;}
+.section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.05em;margin-bottom:12px;}
+
+.menu-card{background:var(--card);border-radius:18px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:pointer;transition:all .2s;border:1.5px solid transparent;}
+.menu-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(108,99,255,.15);border-color:var(--primary-light);}
+.menu-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.icon-v{background:#ede9ff;}
+.icon-d{background:#fce7f3;}
+.icon-g{background:#d1fae5;}
+.icon-r{background:#fef3c7;}
+.menu-info{flex:1;}
+.menu-title{font-size:16px;font-weight:700;margin-bottom:3px;}
+.menu-sub{font-size:12px;color:var(--sub);}
+.menu-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+.chip{font-size:11px;background:var(--bg);border-radius:6px;padding:2px 7px;color:var(--sub);}
+.arrow{color:var(--primary);font-size:18px;margin-left:4px;}
+
+.progress-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.progress-label{font-size:12px;color:var(--sub);width:40px;}
+.progress-bar{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--primary);border-radius:4px;}
+.progress-pct{font-size:12px;color:var(--primary);font-weight:700;width:32px;text-align:right;}
+
+.key-expr{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.key-expr-title{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.key-expr-list{font-size:13px;line-height:1.9;color:var(--text);}
+.key-expr-list span{font-weight:700;color:var(--primary);}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <span class="nav-back" onclick="history.back()">‹</span>
+  <span class="nav-title">동아 윤정미 · 2학년</span>
+</div>
+
+<div class="hero">
+  <div class="hero-num">Lesson 01</div>
+  <div class="hero-title">The Future Is in Our Hands</div>
+  <div class="hero-sub">자유롭고 행복하게 오래오래 살아가길!</div>
+  <div class="hero-tags">
+    <span class="hero-tag">희망 표현하기</span>
+    <span class="hero-tag">안심시키기</span>
+    <span class="hero-tag">to부정사 형용사적 용법</span>
+    <span class="hero-tag">make+목적어+형용사</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">학습 메뉴</div>
+
+  <div class="menu-card" onclick="location.href='lesson1_vocab.html'">
+    <div class="menu-icon icon-v">📋</div>
+    <div class="menu-info">
+      <div class="menu-title">어휘 학습</div>
+      <div class="menu-sub">핵심 단어 65개 + 표현</div>
+      <div class="menu-chips">
+        <span class="chip">단어 목록</span>
+        <span class="chip">뜻 퀴즈</span>
+        <span class="chip">영→한</span>
+        <span class="chip">한→영</span>
+      </div>
+    </div>
+    <span class="arrow">›</span>
+  </div>
+
+  <div class="menu-card" onclick="location.href='lesson1_dialog.html'">
+    <div class="menu-icon icon-d">💬</div>
+    <div class="menu-info">
+      <div class="menu-title">대화 학습</div>
+      <div class="menu-sub">교과서 대화문 8개 전체</div>
+      <div class="menu-chips">
+        <span class="chip">대화 보기</span>
+        <span class="chip">핵심 표현</span>
+        <span class="chip">빈칸 채우기</span>
+        <span class="chip">순서 배열</span>
+      </div>
+    </div>
+    <span class="arrow">›</span>
+  </div>
+
+  <div class="menu-card" onclick="location.href='lesson1_grammar.html'">
+    <div class="menu-icon icon-g">📐</div>
+    <div class="menu-info">
+      <div class="menu-title">문법 학습</div>
+      <div class="menu-sub">to부정사 형용사적 용법 · make+형용사</div>
+      <div class="menu-chips">
+        <span class="chip">개념 정리</span>
+        <span class="chip">문법 퀴즈</span>
+        <span class="chip">어법 교정</span>
+      </div>
+    </div>
+    <span class="arrow">›</span>
+  </div>
+
+  <div class="menu-card" onclick="location.href='lesson1_reading.html'">
+    <div class="menu-icon icon-r">📖</div>
+    <div class="menu-info">
+      <div class="menu-title">본문 학습</div>
+      <div class="menu-sub">Live Freely and Happily Ever After!</div>
+      <div class="menu-chips">
+        <span class="chip">본문 읽기</span>
+        <span class="chip">빈칸 채우기</span>
+        <span class="chip">T/F 퀴즈</span>
+        <span class="chip">문장 순서</span>
+      </div>
+    </div>
+    <span class="arrow">›</span>
+  </div>
+
+  <div style="margin-top:8px;margin-bottom:12px;" class="section-label">의사소통 기능 핵심 표현</div>
+
+  <div class="key-expr">
+    <div class="key-expr-title">희망 표현하기</div>
+    <div class="key-expr-list">
+      · <span>I hope you do your best.</span><br>
+      · I hope you finish the race.<br>
+      · I hope you have a great time.
+    </div>
+  </div>
+
+  <div class="key-expr">
+    <div class="key-expr-title">안심시키기</div>
+    <div class="key-expr-list">
+      · <span>Don't worry. You'll do all right.</span><br>
+      · You'll be okay. / Cheer up!<br>
+      · Things will get better.
+    </div>
+  </div>
+
+  <div class="key-expr">
+    <div class="key-expr-title">언어 형식</div>
+    <div class="key-expr-list">
+      · I had many chances <span>to see</span> dolphins.<br>
+      · The ceremony <span>made us emotional</span>.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
