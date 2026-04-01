@@ -2,163 +2,943 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>1과 The Future Is in Our Hands</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lesson 01 - Follow Your Dream</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-:root{--bg:#f5f5f7;--card:#fff;--primary:#6c63ff;--primary-light:#ede9ff;--text:#1a1a2e;--sub:#6b7280;--border:#e5e7eb;--green:#10b981;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-
-.nav{display:flex;align-items:center;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
-.nav-back{font-size:22px;cursor:pointer;margin-right:12px;color:var(--primary);}
-.nav-title{font-size:15px;font-weight:700;}
-
-.hero{background:linear-gradient(135deg,#6c63ff 0%,#8b83ff 100%);padding:28px 20px 24px;color:#fff;text-align:center;}
-.hero-num{font-size:13px;opacity:.8;margin-bottom:4px;}
-.hero-title{font-size:22px;font-weight:900;margin-bottom:6px;}
-.hero-sub{font-size:12px;opacity:.75;}
-.hero-tags{display:flex;justify-content:center;gap:6px;margin-top:12px;flex-wrap:wrap;}
-.hero-tag{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 12px;font-size:12px;}
-
-.section{max-width:480px;margin:0 auto;padding:20px 16px;}
-.section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.05em;margin-bottom:12px;}
-
-.menu-card{background:var(--card);border-radius:18px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:pointer;transition:all .2s;border:1.5px solid transparent;}
-.menu-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(108,99,255,.15);border-color:var(--primary-light);}
-.menu-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
-.icon-v{background:#ede9ff;}
-.icon-d{background:#fce7f3;}
-.icon-g{background:#d1fae5;}
-.icon-r{background:#fef3c7;}
-.menu-info{flex:1;}
-.menu-title{font-size:16px;font-weight:700;margin-bottom:3px;}
-.menu-sub{font-size:12px;color:var(--sub);}
-.menu-chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
-.chip{font-size:11px;background:var(--bg);border-radius:6px;padding:2px 7px;color:var(--sub);}
-.arrow{color:var(--primary);font-size:18px;margin-left:4px;}
-
-.progress-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.progress-label{font-size:12px;color:var(--sub);width:40px;}
-.progress-bar{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
-.progress-fill{height:100%;background:var(--primary);border-radius:4px;}
-.progress-pct{font-size:12px;color:var(--primary);font-weight:700;width:32px;text-align:right;}
-
-.key-expr{background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
-.key-expr-title{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:6px;}
-.key-expr-list{font-size:13px;line-height:1.9;color:var(--text);}
-.key-expr-list span{font-weight:700;color:var(--primary);}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f0f4f8; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }
+  #root { max-width: 480px; margin: 0 auto; }
+  input, button { font-family: inherit; }
 </style>
 </head>
 <body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
 
-<div class="nav">
-  <span class="nav-back" onclick="history.back()">‹</span>
-  <span class="nav-title">동아 윤정미 · 2학년</span>
-</div>
+// ── 진도 저장: localStorage 사용 ──
+const storage = {
+  get: (key) => { try { const v = localStorage.getItem(key); return v ? { value: v } : null; } catch(e) { return null; } },
+  set: (key, val) => { try { localStorage.setItem(key, val); } catch(e) {} },
+};
 
-<div class="hero">
-  <div class="hero-num">Lesson 01</div>
-  <div class="hero-title">The Future Is in Our Hands</div>
-  <div class="hero-sub">자유롭고 행복하게 오래오래 살아가길!</div>
-  <div class="hero-tags">
-    <span class="hero-tag">희망 표현하기</span>
-    <span class="hero-tag">안심시키기</span>
-    <span class="hero-tag">to부정사 형용사적 용법</span>
-    <span class="hero-tag">make+목적어+형용사</span>
-  </div>
-</div>
+const VOCAB = [
+  { id:"v1", word:"achieve", ko:"이루다, 성취하다", def:"to successfully reach a desired goal or result after effort", ex:"She achieved her dream of becoming a photographer.", syn:"accomplish" },
+  { id:"v2", word:"advice", ko:"조언, 충고", def:"an opinion or suggestion about what someone should do", ex:"Here's some advice to help you.", syn:"suggestion" },
+  { id:"v3", word:"afraid", ko:"두려워하는", def:"feeling fear or anxiety about something", ex:"I was afraid but I took a chance.", syn:"scared" },
+  { id:"v4", word:"amazing", ko:"놀라운", def:"very surprising, impressive, or excellent", ex:"The Northern Lights were amazing.", syn:"astonishing" },
+  { id:"v5", word:"bold", ko:"용감한, 대담한", def:"not frightened of taking risks", ex:"I made a bold decision to quit my job.", syn:"brave" },
+  { id:"v6", word:"chance", ko:"기회", def:"an opportunity to do something", ex:"I got a chance to see the Northern Lights.", syn:"opportunity" },
+  { id:"v7", word:"courage", ko:"용기", def:"the ability to decide to do something difficult or dangerous", ex:"You need courage to change your life.", syn:"-" },
+  { id:"v8", word:"engineering", ko:"공학", def:"the work of designing and creating new products or systems by using scientific methods", ex:"I chose engineering as my major.", syn:"-" },
+  { id:"v9", word:"enter", ko:"참가하다", def:"to be included in a competition, race, or exam", ex:"I entered a photo contest.", syn:"participate" },
+  { id:"v10", word:"error", ko:"실수", def:"a mistake or something that is incorrect", ex:"After years of trial and error, I got better.", syn:"mistake" },
+  { id:"v11", word:"goal", ko:"목표", def:"something that you are trying to do or achieve", ex:"What are you doing to achieve your goal?", syn:"aim" },
+  { id:"v12", word:"graduate", ko:"졸업하다", def:"to successfully complete your studies at a school or university", ex:"After I graduate, I will work at a company.", syn:"-" },
+  { id:"v13", word:"inspire", ko:"영감을 주다", def:"to encourage someone by making them feel confident and eager to do something", ex:"I hope my story can inspire you.", syn:"encourage" },
+  { id:"v14", word:"major", ko:"전공", def:"the main subject studied by a college or university student", ex:"I had to decide on a major in college.", syn:"-" },
+  { id:"v15", word:"photography", ko:"사진 촬영 기술", def:"the art or practice of taking photographs", ex:"I started to learn more about photography.", syn:"-" },
+  { id:"v16", word:"professional", ko:"전문적인", def:"doing something as a paid job rather than as a hobby", ex:"Now I am a professional photographer.", syn:"expert" },
+  { id:"v17", word:"pursue", ko:"추구하다", def:"to work hard in order to achieve something", ex:"Pursuing a dream is not easy.", syn:"chase" },
+  { id:"v18", word:"quit", ko:"그만두다", def:"to leave a job, school, or career", ex:"I quit my job and followed my dream.", syn:"stop" },
+  { id:"v19", word:"realize", ko:"실현하다; 깨닫다", def:"to achieve something you were hoping for; to become aware of something", ex:"I realized that taking pictures made me happy.", syn:"achieve" },
+  { id:"v20", word:"stable", ko:"안정적인", def:"in a good state or condition that is not easily changed or likely to change", ex:"It was a stable job.", syn:"steady" },
+  { id:"v21", word:"suddenly", ko:"갑자기", def:"very quickly and unexpectedly", ex:"Suddenly, I wanted to become a photographer.", syn:"unexpectedly" },
+];
 
-<div class="section">
-  <div class="section-label">학습 메뉴</div>
+const PHRASES = [
+  { id:"p1", phrase:"lead to", ko:"~로 이어지다", def:"to result in something", ex:"Hard work can lead to success." },
+  { id:"p2", phrase:"for a living", ko:"생계 수단으로", def:"as your job or a way of making money", ex:"He takes pictures for a living." },
+  { id:"p3", phrase:"for the first time", ko:"처음으로", def:"on the very first occasion ever", ex:"For the first time in many years, I felt alive." },
+  { id:"p4", phrase:"come true", ko:"이루어지다", def:"to happen as you hoped or dreamed", ex:"My dream came true." },
+  { id:"p5", phrase:"make a decision", ko:"결정하다", def:"to make a choice about something", ex:"I made a bold decision." },
+  { id:"p6", phrase:"take a chance", ko:"모험을 해보다", def:"to try something that involves risk", ex:"I was afraid but I took a chance." },
+  { id:"p7", phrase:"trial and error", ko:"시행착오", def:"a process of trying different ways until one is successful", ex:"After years of trial and error, I got better." },
+  { id:"p8", phrase:"all kinds of", ko:"모든 종류의", def:"every type or sort of something", ex:"I love all kinds of animals." },
+  { id:"p9", phrase:"get a job", ko:"취업하다", def:"to find and start working at a position", ex:"After college, I got a job at an engineering company." },
+  { id:"p10", phrase:"decide on", ko:"~을 결정하다", def:"to choose something from among several possibilities", ex:"I had to decide on a major in college." },
+];
 
-  <div class="menu-card" onclick="location.href='lesson1_vocab.html'">
-    <div class="menu-icon icon-v">📋</div>
-    <div class="menu-info">
-      <div class="menu-title">어휘 학습</div>
-      <div class="menu-sub">핵심 단어 65개 + 표현</div>
-      <div class="menu-chips">
-        <span class="chip">단어 목록</span>
-        <span class="chip">뜻 퀴즈</span>
-        <span class="chip">영→한</span>
-        <span class="chip">한→영</span>
+const DIALOGUES = [
+  {
+    id:1, title:"대화 01 - 달에 관한 책", icon:"🌙",
+    lines:[
+      { sp:"G", en:"You should read this book about the moon. It's really interesting.", ko:"너는 달에 관한 이 책을 읽어야 해. 그것은 정말 흥미로워." },
+      { sp:"B", en:"I know. I've already read it.", ko:"알아. 나는 그것을 이미 읽었어." },
+      { sp:"G", en:"You did? How about the movie? Have you also seen the movie about the book?", ko:"읽었다고? 영화는 어때? 너는 그 책에 관한 영화도 본 적 있니?" },
+      { sp:"B", en:"No, I haven't.", ko:"아니, 없어." },
+      { sp:"G", en:"Well, it's even better than the book. I hope you can see the movie soon.", ko:"음, 그건 책보다 훨씬 더 좋아. 나는 네가 그 영화를 곧 볼 수 있기를 바라." },
+    ],
+    tf:[
+      { q:"The girl has already seen the movie about the moon.", a:true },
+      { q:"The boy has read the book about the moon.", a:true },
+      { q:"The girl thinks the book is better than the movie.", a:false },
+      { q:"The girl recommends the book to the boy.", a:true },
+    ],
+    keyExpr:["Have you also + p.p. ~? (경험 묻기)","I've already + p.p. (현재완료 완료)","I hope you can ~. (희망 표현)","even + 비교급 (비교급 강조)"],
+    blank:{ line:4, sentence:"Well, it's even _____ than the book. I hope you can see the movie soon.", answer:"better", hint:"비교급(better)" }
+  },
+  {
+    id:2, title:"대화 02 - 수의사의 꿈", icon:"🐾",
+    lines:[
+      { sp:"B", en:"I really liked your book about training dogs.", ko:"저는 개를 훈련시키는 것에 관한 당신의 책이 정말 좋았어요." },
+      { sp:"W", en:"Thank you. Do you like dogs?", ko:"고마워. 너는 개를 좋아하니?" },
+      { sp:"B", en:"Yes, I do. I love all kinds of animals.", ko:"네, 좋아해요. 저는 모든 종류의 동물들을 무척 좋아해요." },
+      { sp:"W", en:"Have you ever thought of becoming an animal doctor?", ko:"너는 수의사가 되는 것에 대해 생각해 본 적이 있니?" },
+      { sp:"B", en:"Yes, I have. I really want to become an animal doctor.", ko:"네, 있어요. 저는 수의사가 정말 되고 싶어요." },
+      { sp:"W", en:"What are you doing to achieve your goal?", ko:"너는 네 목표를 이루기 위해 무엇을 하고 있니?" },
+      { sp:"B", en:"I'm doing volunteer work at the local animal house.", ko:"저는 지역 동물 보호소에서 자원봉사 활동을 하고 있어요." },
+      { sp:"W", en:"That's good. What else are you doing?", ko:"좋구나. 그 밖에 무엇을 하고 있니?" },
+      { sp:"B", en:"I'm also watching a lot of TV shows about animals.", ko:"저는 동물에 관한 TV 프로그램들도 많이 보고 있어요." },
+      { sp:"W", en:"You're doing great! I hope you become a good animal doctor someday.", ko:"잘하고 있네! 나는 네가 언젠가 좋은 수의사가 되기를 바라." },
+      { sp:"B", en:"Thank you.", ko:"고맙습니다." },
+    ],
+    tf:[
+      { q:"The boy's dream is to become an animal doctor.", a:true },
+      { q:"The boy is volunteering at the local animal house.", a:true },
+      { q:"The boy is taking classes about animals.", a:false },
+      { q:"The woman wrote a book about training dogs.", a:true },
+    ],
+    keyExpr:["Have you ever thought of + -ing? (경험 묻기)","What are you doing to achieve your goal? (to부정사 - 목적)","I hope you become ~ someday. (희망 표현)","all kinds of ~ (모든 종류의)"],
+    blank:{ line:9, sentence:"You're doing great! I hope you become a good animal doctor _____.", answer:"someday", hint:"언젠가 (부사)" }
+  },
+  {
+    id:3, title:"대화 03 - 스페인 음식", icon:"🥘",
+    lines:[
+      { sp:"G", en:"Have you ever had Spanish food before?", ko:"너는 전에 스페인 음식을 먹어 본 적이 있니?" },
+      { sp:"B", en:"No, I haven't. Have you tried it?", ko:"아니, 없어. 너는 그것을 먹어 본 적 있니?" },
+      { sp:"G", en:"Yes, I have. I hope you can try it sometime. It's really good.", ko:"응, 있어. 나는 네가 언젠가 그것을 먹어 볼 수 있기를 바라. 그것은 정말 맛있어." },
+      { sp:"B", en:"I will. For now, I'll just buy this Spanish recipe book.", ko:"그럴게. 우선은, 이 스페인 요리책을 사야겠어." },
+    ],
+    tf:[
+      { q:"The boy has tried Spanish food before.", a:false },
+      { q:"The girl has tried Spanish food.", a:true },
+      { q:"The boy will buy a Spanish recipe book.", a:true },
+      { q:"The girl dislikes Spanish food.", a:false },
+    ],
+    keyExpr:["Have you ever had ~ before? (경험 묻기)","No, I haven't. (현재완료 부정 대답)","I hope you can try it sometime. (희망 표현)","For now (우선은)"],
+    blank:{ line:2, sentence:"Yes, I have. I hope you can try it sometime. It's really _____.", answer:"good", hint:"형용사" }
+  },
+];
+
+const GRAMMAR_NOTES = [
+  {
+    id:"g_wh", title:"접속사 whether[if]", icon:"🔗", color:"#0ea5e9",
+    summary:"whether[if]는 '~인지 (아닌지)'라는 의미로 「whether[if]+주어+동사」 형태의 명사절을 이끈다.",
+    points:[
+      { label:"목적어절 (whether = if)", en:"I didn't know whether[if] I really enjoyed it.", ko:"나는 내가 정말로 그것을 즐기는지 알지 못했다." },
+      { label:"주어절 (whether만 가능!)", en:"Whether she will come is important to me.", ko:"그녀가 올지가 내게 중요하다." },
+      { label:"보어절", en:"The question is whether we have enough time.", ko:"문제는 우리가 시간이 충분한지이다." },
+      { label:"전치사 뒤 whether만 가능", en:"✅ I'm thinking about whether I should go.\n❌ I'm thinking about if I should go.", ko:"전치사(about, of 등) 다음에는 if를 쓸 수 없다!" },
+      { label:"or not 사용법", en:"✅ whether he likes it or not\n✅ whether or not he likes it\n❌ if or not he likes it", ko:"'if or not'은 틀린 표현이다!" },
+    ]
+  },
+  {
+    id:"g_to", title:"to부정사의 형용사적 용법", icon:"📌", color:"#f59e0b",
+    summary:"to부정사가 명사(구)나 대명사를 뒤에서 수식하여 '~할, ~하는'의 의미를 나타낸다.",
+    points:[
+      { label:"기본: 명사 뒤에서 수식", en:"I got a chance to see the Northern Lights.", ko:"나는 오로라를 볼 기회가 있었다." },
+      { label:"형용사 + 명사 + to부정사 어순", en:"Please bring me some interesting books to read.", ko:"형용사가 있으면: 형용사+명사+to부정사 순서" },
+      { label:"전치사 필수 (목적어 관계)", en:"✅ I need a pen to write with.\n✅ I need a chair to sit on.\n❌ I need a chair to sit.", ko:"수식받는 명사가 전치사의 목적어면 전치사를 반드시!" },
+      { label:"-thing/-one/-body 수식", en:"Do you have anything cold to drink?\n(anything + cold + to drink)", ko:"-thing 대명사는 「-thing+형용사+to부정사」 어순!" },
+    ]
+  }
+];
+
+const GRAMMAR_QS = [
+  { id:"gq1", diff:"기본", topic:"whether/if", q:"빈칸에 알맞은 것을 고르시오.\n\"I didn't know _____ I really enjoyed it.\"", opts:["that","whether","what","when"], ans:1, exp:"whether[if]는 '~인지'의 의미. know의 목적어절을 이끈다." },
+  { id:"gq2", diff:"기본", topic:"whether/if", q:"빈칸에 알맞은 것을 고르시오.\n\"I'm wondering _____ this is a train for Seoul.\"", opts:["what","who","if","how"], ans:2, exp:"if는 목적어절에서 whether와 같이 '~인지'의 의미로 쓰인다." },
+  { id:"gq3", diff:"기본", topic:"whether/if", q:"빈칸에 알맞은 것을 고르시오.\n\"_____ she knows the truth is important.\"", opts:["If","Whether","That","What"], ans:1, exp:"주어 역할을 하는 명사절에는 whether만 사용! if는 주어절 불가." },
+  { id:"gq4", diff:"기본", topic:"to부정사", q:"빈칸에 알맞은 것을 고르시오.\n\"There will be a chance _____ questions after the talk.\"", opts:["ask","asking","to ask","asked"], ans:2, exp:"to ask가 명사 chance를 수식하는 형용사적 용법이다." },
+  { id:"gq5", diff:"기본", topic:"to부정사", q:"빈칸에 알맞은 것을 고르시오.\n\"There are many places _____ in New York.\"", opts:["visit","visits","visited","to visit"], ans:3, exp:"to visit이 명사 places를 수식하는 형용사적 용법이다." },
+  { id:"gq6", diff:"발전", topic:"whether/if", q:"어법상 틀린 것을 고르시오.", opts:["I'm not sure if he will come.","I'm thinking about whether I should go.","I'm thinking about if I should go.","Whether she likes it or not is clear."], ans:2, exp:"전치사(about) 다음에는 whether만! if는 전치사 뒤에 쓸 수 없다." },
+  { id:"gq7", diff:"발전", topic:"whether/if", q:"빈칸에 알맞은 것을 고르시오.\n\"Please tell me _____ or not you can come.\"", opts:["if","whether","both","neither"], ans:1, exp:"'if or not'은 틀린 표현. 'whether or not' 또는 'whether ~ or not'만 가능." },
+  { id:"gq8", diff:"발전", topic:"to부정사", q:"어법상 틀린 것을 고르시오.", opts:["I have a lot of comics to read.","She needs a partner to dance with.","Do you have anything cold to drink?","Dennis has two sisters to take care."], ans:3, exp:"'take care of sisters'에서 sisters가 of의 목적어이므로 'to take care of'가 맞다." },
+  { id:"gq9", diff:"발전", topic:"to부정사", q:"우리말에 맞게 빈칸을 채우시오.\n\"우리는 잠을 잘 커다란 텐트를 쳤다.\nWe set up a big tent _____.\"", opts:["to sleep","to sleep in","sleeping","slept"], ans:1, exp:"'sleep in a tent'에서 tent가 in의 목적어이므로 전치사 in이 필요: to sleep in." },
+  { id:"gq10", diff:"심화", topic:"whether/if", q:"어법상 옳은 문장을 고르시오.", opts:["I'm worrying about if I need to prepare lunch.","I wonder if will he come on time.","She doesn't know whether he is a student or not.","Tell me if or not you can join us."], ans:2, exp:"전치사 뒤→whether만, if 뒤→'주어+동사' 어순, 'if or not'→불가." },
+  { id:"gq11", diff:"심화", topic:"to부정사", q:"어법상 옳은 문장을 고르시오.", opts:["You should take warm something to wear.","I'm looking for a chair to sit.","Give the other person a chance to talk.","My mother has three cats to take care."], ans:2, exp:"①-thing+형용사+to부정사 어순 위반, ②sit in a chair → to sit in, ④take care of cats → to take care of." },
+  { id:"gq12", diff:"심화", topic:"종합", q:"다음 중 어법상 옳은 문장의 개수는?\n① I'm looking for a chair to sit.\n② I want to know whether or not he likes me.\n③ Whether he wants help or not is important.\n④ I don't have time to play with my cat.\n⑤ I'm worrying about if I prepared lunch.", opts:["1개","2개","3개","4개"], ans:2, exp:"②③④가 맞다. ①→to sit in, ⑤→전치사 뒤 if 불가(whether로)" },
+];
+
+const READING = [
+  { id:1, en:"Hello, everyone. My name is David Parker, and I'm a photographer.", ko:"안녕하세요, 여러분. 제 이름은 David Parker이고, 저는 사진작가입니다." },
+  { id:2, en:"Today, I'm going to tell you how I found my dream and realized it.", ko:"오늘, 저는 여러분에게 제가 어떻게 저의 꿈을 찾고 그것을 실현했는지를 말씀드릴 예정입니다." },
+  { id:3, en:"I hope my story can inspire you.", ko:"저는 제 이야기가 여러분에게 영감을 줄 수 있기를 바랍니다." },
+  { id:4, en:"When I was young, I loved stars. I also liked taking pictures.", ko:"제가 어렸을 때, 저는 별들을 무척 좋아했습니다." },
+  { id:5, en:"However, I never thought these things could lead to a job.", ko:"하지만, 저는 이것들이 직업으로 이어질 수 있으리라고는 결코 생각하지 못했습니다." },
+  { id:6, en:"In fact, I didn't have a dream at all.", ko:"사실, 저는 꿈이 전혀 없었습니다." },
+  { id:7, en:"When I had to decide on a major in college, I chose engineering.", ko:"제가 대학에서 전공을 정해야 했을 때, 저는 공학을 선택했습니다." },
+  { id:8, en:"Being an engineer looked OK. After college, I got a job at an engineering company.", ko:"엔지니어가 되는 것은 괜찮아 보였습니다. 대학을 마친 후에, 저는 엔지니어링 회사에 일자리를 얻었습니다." },
+  { id:9, en:"It was a stable job, but I didn't know whether I really enjoyed it.", ko:"그것은 안정적인 직업이었지만, 저는 제가 그것을 정말로 즐기는지는 알지 못했습니다." },
+  { id:10, en:"Everything changed when I went on vacation to Iceland one winter.", ko:"어느 겨울 제가 아이슬란드로 휴가를 갔을 때 모든 것이 바뀌었습니다." },
+  { id:11, en:"There I got a chance to see the Northern Lights.", ko:"그곳에서 저는 오로라(북극광)를 볼 기회를 얻었습니다." },
+  { id:12, en:"The lights were amazing, and I took many pictures of the dancing lights in the sky.", ko:"그 빛은 놀라웠고, 저는 하늘에서 춤추는 빛들의 사진을 많이 찍었습니다." },
+  { id:13, en:"For the first time in many years, I could feel my heart beating fast.", ko:"수년 만에 처음으로, 저는 제 심장이 빠르게 뛰고 있는 것을 느낄 수 있었습니다." },
+  { id:14, en:"After I came back, I entered a photo contest with the pictures I took in Iceland.", ko:"돌아온 후에, 저는 제가 아이슬란드에서 찍은 사진들로 사진 대회에 참가했습니다." },
+  { id:15, en:"Surprisingly, I won first prize, and this gave me a chance to think about my life.", ko:"놀랍게도, 저는 1등상을 탔고, 이 일은 저에게 제 인생에 대해 생각할 기회를 주었습니다." },
+  { id:16, en:"I realized that taking pictures made me happy.", ko:"저는 사진 찍는 것이 저를 행복하게 만든다는 것을 깨달았습니다." },
+  { id:17, en:"Suddenly, I wanted to become a good photographer, so I started to learn more about photography.", ko:"갑자기, 저는 좋은 사진작가가 되고 싶었고, 그래서 저는 사진 촬영 기술에 대해 더 배우기 시작했습니다." },
+  { id:18, en:"After years of trial and error, I got better, and I began to do some part-time work as a photographer.", ko:"수년간의 시행착오 끝에, 저는 실력이 더 좋아졌고, 사진작가로서 몇몇 시간제 근무를 하기 시작했습니다." },
+  { id:19, en:"Then one day, I made a bold decision. I quit my job and decided to take pictures for a living.", ko:"그러던 어느 날, 저는 용감한 결심을 했습니다. 저는 제 직장을 그만두고 생계 수단으로 사진을 찍기로 결정했습니다." },
+  { id:20, en:"I wasn't sure if I could succeed, but I decided to try.", ko:"저는 제가 성공할 수 있을지 확신하지 못했지만, 저는 시도하기로 결심했습니다." },
+  { id:21, en:"I really wanted to do something that made me happy.", ko:"저는 저를 행복하게 만들어 주는 무언가를 정말로 하고 싶었습니다." },
+  { id:22, en:"Now, I'm a professional photographer, and I'm happy.", ko:"이제, 저는 전문 사진작가이고, 행복합니다." },
+  { id:23, en:"First, follow your heart. Think about what you like to do and what makes you happy.", ko:"첫째, 여러분의 마음을 따르세요." },
+  { id:24, en:"Second, work hard. Pursuing a dream is not easy.", ko:"둘째, 열심히 노력하세요. 꿈을 추구하는 것은 쉽지 않습니다." },
+  { id:25, en:"Third, be bold. You need courage to make decisions that will change your life.", ko:"셋째, 용감해지세요. 인생을 바꿀 결정을 하기 위해서 용기가 필요합니다." },
+  { id:26, en:"I was afraid but I took a chance. I truly hope you can find a dream, pursue it, and live it!", ko:"저는 두려웠지만 모험을 했습니다. 저는 여러분이 꿈을 찾고 실현할 수 있기를 진심으로 바랍니다!" },
+];
+
+const COMPREHENSION = [
+  { id:"cq1", diff:"기본", q:"David Parker의 현재 직업은 무엇입니까?", opts:["Engineer","Teacher","Photographer","Doctor"], ans:2, exp:"'Now, I'm a professional photographer'에서 알 수 있다." },
+  { id:"cq2", diff:"기본", q:"David가 대학에서 선택한 전공은?", opts:["Photography","Engineering","Education","Arts"], ans:1, exp:"'I chose engineering'에서 공학을 전공했음을 알 수 있다." },
+  { id:"cq3", diff:"기본", q:"David는 어디서 오로라(북극광)를 보았습니까?", opts:["Norway","Canada","Iceland","Finland"], ans:2, exp:"'when I went on vacation to Iceland one winter'에서 알 수 있다." },
+  { id:"cq4", diff:"기본", q:"David Parker의 꿈을 찾는 조언 3가지는?", opts:["Follow your heart / Work hard / Be bold","Study hard / Be brave / Take risks","Follow others / Work smart / Stay stable","Dream big / Work less / Be patient"], ans:0, exp:"First-follow your heart, Second-work hard, Third-be bold." },
+  { id:"cq5", diff:"발전", q:"David가 사진작가의 꿈을 갖게 된 직접적인 계기는?", opts:["He won a photo contest.","He took a photography class.","He saw the Northern Lights in Iceland.","His friend encouraged him."], ans:2, exp:"아이슬란드에서 오로라를 보고 사진을 찍으면서 심장이 빠르게 뛰는 것을 느꼈다." },
+  { id:"cq6", diff:"발전", q:"사진 대회에서 1등을 한 후 David는 무엇을 했습니까?", opts:["He quit his job immediately.","He started to learn more about photography.","He traveled to more countries.","He opened a photo studio."], ans:1, exp:"'I started to learn more about photography'에서 알 수 있다." },
+  { id:"cq7", diff:"심화", q:"What does 'stable' mean in 'It was a stable job'?", opts:["exciting and creative","in a good condition not easily changed","very well-paying","boring and repetitive"], ans:1, exp:"stable = in a good state or condition that is not easily changed or likely to change" },
+  { id:"cq8", diff:"심화", q:"According to the text, which is NOT part of David's advice?", opts:["Follow your heart.","Work hard.","Be bold.","Save money first."], ans:3, exp:"본문의 조언은 마음을 따라라/열심히 일해라/용감해져라 세 가지. 돈 저축은 언급 없음." },
+];
+
+const C = {
+  primary:"#1e3a5f", secondary:"#0ea5e9", accent:"#f59e0b",
+  success:"#10b981", error:"#ef4444", bg:"#f0f4f8",
+  card:"#ffffff", text:"#1e293b", muted:"#64748b",
+};
+
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+const btnStyle = (bg,col,extra={}) => ({
+  background:bg, color:col, border:"none", borderRadius:12,
+  padding:"12px 18px", fontWeight:700, fontSize:14, cursor:"pointer",
+  display:"flex", alignItems:"center", justifyContent:"center", gap:6, ...extra
+});
+
+function ProgressBar({val,max,color=C.secondary}) {
+  const pct=max>0?Math.min(100,(val/max)*100):0;
+  return <div style={{background:"#e2e8f0",borderRadius:8,height:8,overflow:"hidden"}}>
+    <div style={{width:`${pct}%`,background:color,height:"100%",borderRadius:8,transition:"width .4s"}}/>
+  </div>;
+}
+
+function Header({title,onBack,right}) {
+  return <div style={{background:`linear-gradient(135deg,${C.primary},#2563eb)`,color:"#fff",padding:"14px 16px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:50}}>
+    {onBack && <button onClick={onBack} style={{background:"none",border:"none",color:"#fff",cursor:"pointer",padding:4,fontSize:22,lineHeight:1}}>‹</button>}
+    <span style={{flex:1,fontWeight:800,fontSize:16}}>{title}</span>
+    {right && <span style={{fontSize:13,opacity:.8}}>{right}</span>}
+  </div>;
+}
+
+function Card({children,style={}}) {
+  return <div style={{background:C.card,borderRadius:16,padding:18,boxShadow:"0 2px 12px rgba(0,0,0,.08)",margin:"10px 14px",...style}}>{children}</div>;
+}
+
+function Tag({label,color}) {
+  return <span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,fontSize:12,fontWeight:700,background:color+"22",color}}>{label}</span>;
+}
+
+function QuizResult({score,total,onRetry,onHome}) {
+  const pct=total>0?Math.round(score/total*100):0;
+  const [emoji,msg]=pct>=90?["🏆","완벽!"]:pct>=70?["⭐","훌륭해요!"]:pct>=50?["👍","좋아요!"]:["💪","다시 도전!"];
+  const color=pct>=70?C.success:pct>=50?C.accent:C.error;
+  return <Card style={{textAlign:"center",padding:32}}>
+    <div style={{fontSize:52}}>{emoji}</div>
+    <div style={{fontSize:26,fontWeight:900,color,margin:"8px 0"}}>{pct}점</div>
+    <div style={{color:C.muted,marginBottom:6}}>{score}/{total} 정답</div>
+    <div style={{fontSize:16,fontWeight:700,color,marginBottom:24}}>{msg}</div>
+    <div style={{display:"flex",gap:10}}>
+      <button onClick={onRetry} style={{...btnStyle(C.secondary,"#fff"),flex:1}}>🔄 다시 풀기</button>
+      <button onClick={onHome} style={{...btnStyle(C.primary,"#fff"),flex:1}}>‹ 메뉴로</button>
+    </div>
+  </Card>;
+}
+
+function MCQ({question,opts,selected,onSelect,answered,correct,explanation}) {
+  return <div>
+    <p style={{fontWeight:600,fontSize:14,lineHeight:1.7,marginBottom:14,whiteSpace:"pre-line"}}>{question}</p>
+    <div style={{display:"flex",flexDirection:"column",gap:9}}>
+      {opts.map((opt,i)=>{
+        let bg="#f8fafc",border="2px solid #e2e8f0",color=C.text;
+        if(answered){
+          if(i===correct){bg="#d1fae5";border=`2px solid ${C.success}`;color="#065f46";}
+          else if(i===selected&&i!==correct){bg="#fee2e2";border=`2px solid ${C.error}`;color="#991b1b";}
+        } else if(i===selected){bg="#dbeafe";border=`2px solid ${C.secondary}`;}
+        return <button key={i} onClick={()=>!answered&&onSelect(i)}
+          style={{background:bg,border,borderRadius:12,padding:"11px 14px",textAlign:"left",cursor:answered?"default":"pointer",color,fontWeight:500,fontSize:13,display:"flex",alignItems:"center",gap:10}}>
+          <span style={{minWidth:22,height:22,borderRadius:11,background:answered&&i===correct?C.success:answered&&i===selected&&i!==correct?C.error:"#cbd5e1",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,flexShrink:0}}>
+            {answered&&i===correct?"✓":answered&&i===selected&&i!==correct?"✗":["①","②","③","④"][i]}
+          </span>
+          {opt}
+        </button>;
+      })}
+    </div>
+    {answered&&explanation&&<div style={{marginTop:10,padding:"12px 14px",background:"#fffbeb",borderRadius:12,borderLeft:`4px solid ${C.accent}`,fontSize:13}}>
+      <div style={{fontWeight:700,color:C.accent,marginBottom:4}}>💡 해설</div>
+      <div style={{lineHeight:1.6}}>{explanation}</div>
+    </div>}
+  </div>;
+}
+
+function Home({goTo,progress}) {
+  const menus=[
+    {id:"vocab_menu",icon:"📚",label:"어휘 학습",sub:"단어 & 영영풀이",color:"#6366f1"},
+    {id:"phrase_menu",icon:"💬",label:"구문 학습",sub:"핵심 표현 & 숙어",color:"#0ea5e9"},
+    {id:"dialogue_menu",icon:"🗣️",label:"대화문 학습",sub:"순서·T/F·빈칸",color:"#10b981"},
+    {id:"grammar_menu",icon:"⚡",label:"문법 학습",sub:"whether/if · to부정사",color:"#f59e0b"},
+    {id:"reading_menu",icon:"📖",label:"본문 학습",sub:"해석 & 독해 문제",color:"#ec4899"},
+    {id:"master_quiz",icon:"🏆",label:"종합 퀴즈",sub:"난이도별 문제",color:"#ef4444"},
+    {id:"my_record",icon:"📊",label:"내 기록",sub:"점수 & 진도 확인",color:"#8b5cf6"},
+  ];
+  return <div>
+    <div style={{background:`linear-gradient(160deg,${C.primary},#1d4ed8)`,padding:"28px 18px 24px",color:"#fff"}}>
+      <div style={{fontSize:11,opacity:.7,letterSpacing:2,marginBottom:4}}>동아출판 윤정미 · 3학년</div>
+      <div style={{fontSize:22,fontWeight:900,marginBottom:2}}>Lesson 01</div>
+      <div style={{fontSize:17,fontWeight:700,marginBottom:16}}>📸 Follow Your Dream</div>
+      <div style={{background:"rgba(255,255,255,.15)",borderRadius:14,padding:"12px 16px",display:"flex",justifyContent:"space-between"}}>
+        <div><div style={{fontSize:11,opacity:.8}}>어휘</div><div style={{fontSize:20,fontWeight:900}}>{VOCAB.length}단어</div></div>
+        <div><div style={{fontSize:11,opacity:.8}}>문법</div><div style={{fontSize:20,fontWeight:900}}>{GRAMMAR_QS.length}문항</div></div>
+        <div><div style={{fontSize:11,opacity:.8}}>독해</div><div style={{fontSize:20,fontWeight:900}}>{COMPREHENSION.length}문항</div></div>
       </div>
     </div>
-    <span class="arrow">›</span>
-  </div>
-
-  <div class="menu-card" onclick="location.href='lesson1_dialog.html'">
-    <div class="menu-icon icon-d">💬</div>
-    <div class="menu-info">
-      <div class="menu-title">대화 학습</div>
-      <div class="menu-sub">교과서 대화문 8개 전체</div>
-      <div class="menu-chips">
-        <span class="chip">대화 보기</span>
-        <span class="chip">핵심 표현</span>
-        <span class="chip">빈칸 채우기</span>
-        <span class="chip">순서 배열</span>
+    <div style={{padding:"14px 14px 100px"}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        {menus.map(m=>(
+          <button key={m.id} onClick={()=>goTo(m.id)}
+            style={{background:C.card,border:"none",borderRadius:14,padding:"16px 12px",cursor:"pointer",textAlign:"left",boxShadow:"0 2px 8px rgba(0,0,0,.07)",borderTop:`3px solid ${m.color}`}}>
+            <div style={{fontSize:26,marginBottom:6}}>{m.icon}</div>
+            <div style={{fontSize:13,fontWeight:800,color:C.text}}>{m.label}</div>
+            <div style={{fontSize:11,color:C.muted,marginTop:2}}>{m.sub}</div>
+          </button>
+        ))}
       </div>
     </div>
-    <span class="arrow">›</span>
-  </div>
+  </div>;
+}
 
-  <div class="menu-card" onclick="location.href='lesson1_grammar.html'">
-    <div class="menu-icon icon-g">📐</div>
-    <div class="menu-info">
-      <div class="menu-title">문법 학습</div>
-      <div class="menu-sub">to부정사 형용사적 용법 · make+형용사</div>
-      <div class="menu-chips">
-        <span class="chip">개념 정리</span>
-        <span class="chip">문법 퀴즈</span>
-        <span class="chip">어법 교정</span>
+function VocabMenu({goTo,goBack}) {
+  return <div>
+    <Header title="📚 어휘 학습" onBack={goBack}/>
+    <div style={{padding:14}}>
+      {[
+        {id:"vocab_flash",icon:"🃏",label:"영영풀이 플래시카드",desc:"단어 뜻을 영어로 학습해요"},
+        {id:"vocab_quiz",icon:"🎯",label:"뜻 매칭 퀴즈",desc:"단어와 한국어 뜻을 연결해요"},
+      ].map(m=>(
+        <button key={m.id} onClick={()=>goTo(m.id)} style={{...btnStyle(C.card,C.text),width:"100%",justifyContent:"flex-start",gap:14,marginBottom:10,padding:"16px 18px",boxShadow:"0 2px 8px rgba(0,0,0,.07)",borderRadius:14}}>
+          <span style={{fontSize:28}}>{m.icon}</span>
+          <div style={{textAlign:"left"}}><div style={{fontWeight:700,fontSize:14}}>{m.label}</div><div style={{color:C.muted,fontSize:12}}>{m.desc}</div></div>
+          <span style={{marginLeft:"auto",color:C.muted}}>›</span>
+        </button>
+      ))}
+    </div>
+  </div>;
+}
+
+function VocabFlash({goBack}) {
+  const [order]=useState(()=>shuffle([...Array(VOCAB.length).keys()]));
+  const [idx,setIdx]=useState(0);
+  const [flipped,setFlipped]=useState(false);
+  const [showKo,setShowKo]=useState(false);
+  const v=VOCAB[order[idx]];
+  return <div>
+    <Header title="🃏 플래시카드" onBack={goBack} right={`${idx+1}/${VOCAB.length}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={idx+1} max={VOCAB.length}/>
+      <div onClick={()=>setFlipped(!flipped)} style={{background:flipped?"#1e3a5f":C.card,borderRadius:20,padding:28,textAlign:"center",cursor:"pointer",minHeight:200,display:"flex",flexDirection:"column",justifyContent:"center",boxShadow:"0 4px 20px rgba(0,0,0,.12)",marginTop:14,transition:"all .3s"}}>
+        {!flipped?<>
+          <div style={{fontSize:28,fontWeight:900,color:C.primary,marginBottom:8}}>{v.word}</div>
+          {v.syn!=="-"&&<div style={{fontSize:13,color:C.secondary,marginBottom:10}}>≈ {v.syn}</div>}
+          {showKo&&<div style={{padding:"8px 16px",background:"#f0f4f8",borderRadius:10,fontSize:13,color:C.muted,margin:"0 auto"}}>{v.ko}</div>}
+          <div style={{fontSize:12,color:C.muted,marginTop:12}}>탭하여 뜻 확인</div>
+        </>:<>
+          <div style={{fontSize:14,fontWeight:700,color:"#93c5fd",marginBottom:10}}>{v.word}</div>
+          <div style={{fontSize:15,color:"#fff",lineHeight:1.7,marginBottom:10}}>{v.def}</div>
+          <div style={{fontSize:13,color:"#bfdbfe",fontStyle:"italic"}}>"{v.ex}"</div>
+        </>}
+      </div>
+      <div style={{display:"flex",gap:10,marginTop:12}}>
+        <button onClick={()=>{setIdx(Math.max(0,idx-1));setFlipped(false);}} disabled={idx===0}
+          style={{...btnStyle(idx===0?"#e2e8f0":C.card,idx===0?C.muted:C.primary),flex:1,border:`2px solid ${idx===0?"#e2e8f0":"#cbd5e1"}`}}>‹ 이전</button>
+        <button onClick={()=>setShowKo(!showKo)} style={{...btnStyle("#f0f4f8",C.muted),padding:"12px 14px"}}>{showKo?"🙈":"👁"}</button>
+        <button onClick={()=>{setIdx(Math.min(VOCAB.length-1,idx+1));setFlipped(false);}} disabled={idx===VOCAB.length-1}
+          style={{...btnStyle(idx===VOCAB.length-1?"#e2e8f0":C.secondary,idx===VOCAB.length-1?C.muted:"#fff"),flex:1}}>다음 ›</button>
+      </div>
+      <Card style={{marginTop:10}}>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+          <Tag label={v.ko} color={C.primary}/>
+          {v.syn!=="-"&&<Tag label={`= ${v.syn}`} color={C.accent}/>}
+        </div>
+      </Card>
+    </div>
+  </div>;
+}
+
+function VocabQuiz({goBack,updateProgress}) {
+  const makeQ=()=>{const s=shuffle(VOCAB);const t=s[0];const opts=shuffle([t,...s.slice(1,4)]);return{t,opts,correct:opts.findIndex(o=>o.id===t.id)};};
+  const [q,setQ]=useState(makeQ);
+  const [sel,setSel]=useState(null);
+  const [ans,setAns]=useState(false);
+  const [score,setScore]=useState(0);
+  const [cnt,setCnt]=useState(0);
+  const [done,setDone]=useState(false);
+  const T=10;
+  const pick=(i)=>{if(ans)return;setSel(i);setAns(true);if(i===q.correct)setScore(s=>s+1);setCnt(c=>c+1);};
+  const next=()=>{if(cnt>=T){setDone(true);updateProgress("vocab",score,T);return;}setQ(makeQ());setSel(null);setAns(false);};
+  const retry=()=>{setScore(0);setCnt(0);setDone(false);setQ(makeQ());setSel(null);setAns(false);};
+  if(done)return <div><Header title="🎯 어휘 퀴즈" onBack={goBack}/><QuizResult score={score} total={T} onRetry={retry} onHome={goBack}/></div>;
+  return <div>
+    <Header title="🎯 어휘 퀴즈" onBack={goBack} right={`${cnt+1}/${T}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={cnt} max={T}/>
+      <Card style={{marginTop:10}}>
+        <div style={{fontSize:11,color:C.muted,marginBottom:8}}>단어의 한국어 뜻으로 알맞은 것은?</div>
+        <div style={{fontSize:24,fontWeight:900,color:C.primary,marginBottom:4}}>{q.t.word}</div>
+        <div style={{fontSize:12,color:C.muted,marginBottom:14,fontStyle:"italic"}}>"{q.t.ex}"</div>
+        <div style={{display:"flex",flexDirection:"column",gap:9}}>
+          {q.opts.map((v,i)=>{
+            let bg="#f8fafc",border="2px solid #e2e8f0",col=C.text;
+            if(ans){if(i===q.correct){bg="#d1fae5";border=`2px solid ${C.success}`;col="#065f46";}else if(i===sel&&i!==q.correct){bg="#fee2e2";border=`2px solid ${C.error}`;col="#991b1b";}}
+            else if(i===sel){bg="#dbeafe";border=`2px solid ${C.secondary}`;}
+            return <button key={i} onClick={()=>pick(i)} style={{background:bg,border,borderRadius:12,padding:"11px 14px",textAlign:"left",cursor:ans?"default":"pointer",color:col,fontWeight:600,fontSize:13}}>{v.ko}</button>;
+          })}
+        </div>
+        {ans&&<div style={{marginTop:10,padding:"10px 14px",background:"#fffbeb",borderRadius:12,borderLeft:`4px solid ${C.accent}`,fontSize:12}}><b>{q.t.word}</b>: {q.t.def}</div>}
+      </Card>
+      {ans&&<button onClick={next} style={{...btnStyle(C.secondary,"#fff"),width:"100%",margin:"4px 0"}}>{cnt+1>=T?"결과 보기":"다음 ›"}</button>}
+    </div>
+  </div>;
+}
+
+function PhraseMenu({goBack}) {
+  const [idx,setIdx]=useState(0);
+  const [show,setShow]=useState(false);
+  const p=PHRASES[idx];
+  return <div>
+    <Header title="💬 핵심 구문" onBack={goBack} right={`${idx+1}/${PHRASES.length}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={idx+1} max={PHRASES.length}/>
+      <Card style={{textAlign:"center",marginTop:14,padding:24}}>
+        <div style={{fontSize:20,fontWeight:900,color:C.primary,marginBottom:10}}>{p.phrase}</div>
+        <button onClick={()=>setShow(!show)} style={{...btnStyle("#f0f4f8",C.muted),padding:"6px 14px",fontSize:12,margin:"0 auto 10px"}}>
+          {show?"🙈 뜻 숨기기":"👁 한국어 뜻 보기"}
+        </button>
+        {show&&<div style={{fontSize:17,fontWeight:700,color:C.secondary,marginBottom:10}}>{p.ko}</div>}
+        <div style={{background:"#f0f4f8",borderRadius:12,padding:"12px 16px",fontSize:13,lineHeight:1.7,textAlign:"left",marginBottom:10}}>
+          <div style={{fontWeight:700,color:C.muted,fontSize:11,marginBottom:4}}>영영 풀이</div>{p.def}
+        </div>
+        <div style={{background:"#fffbeb",borderRadius:12,padding:"10px 14px",fontSize:13,fontStyle:"italic",textAlign:"left"}}>
+          <div style={{fontWeight:700,color:C.accent,fontSize:11,marginBottom:4}}>예문</div>{p.ex}
+        </div>
+      </Card>
+      <div style={{display:"flex",gap:10}}>
+        <button onClick={()=>{setIdx(Math.max(0,idx-1));setShow(false);}} disabled={idx===0}
+          style={{...btnStyle(idx===0?"#e2e8f0":C.card,idx===0?C.muted:C.primary),flex:1,border:`2px solid ${idx===0?"#e2e8f0":"#cbd5e1"}`}}>‹ 이전</button>
+        <button onClick={()=>{setIdx(Math.min(PHRASES.length-1,idx+1));setShow(false);}} disabled={idx===PHRASES.length-1}
+          style={{...btnStyle(idx===PHRASES.length-1?"#e2e8f0":C.secondary,idx===PHRASES.length-1?C.muted:"#fff"),flex:1}}>다음 ›</button>
       </div>
     </div>
-    <span class="arrow">›</span>
-  </div>
+  </div>;
+}
 
-  <div class="menu-card" onclick="location.href='lesson1_reading.html'">
-    <div class="menu-icon icon-r">📖</div>
-    <div class="menu-info">
-      <div class="menu-title">본문 학습</div>
-      <div class="menu-sub">Live Freely and Happily Ever After!</div>
-      <div class="menu-chips">
-        <span class="chip">본문 읽기</span>
-        <span class="chip">빈칸 채우기</span>
-        <span class="chip">T/F 퀴즈</span>
-        <span class="chip">문장 순서</span>
+function DialogueMenu({goTo,goBack}) {
+  return <div>
+    <Header title="🗣️ 대화문 학습" onBack={goBack}/>
+    <div style={{padding:14}}>
+      {DIALOGUES.map(d=>(
+        <Card key={d.id} style={{margin:"8px 0"}}>
+          <div style={{fontWeight:700,fontSize:14,marginBottom:10}}>{d.icon} {d.title}</div>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            {[{id:`dv_${d.id}`,label:"본문",color:C.primary},{id:`dtf_${d.id}`,label:"T/F",color:C.success},{id:`dord_${d.id}`,label:"순서배열",color:C.accent},{id:`dblank_${d.id}`,label:"빈칸",color:C.secondary}].map(b=>(
+              <button key={b.id} onClick={()=>goTo(b.id)} style={{...btnStyle(b.color+"22",b.color),flex:1,padding:"8px 4px",fontSize:12,border:`1px solid ${b.color}44`}}>{b.label}</button>
+            ))}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>;
+}
+
+function DialogueView({dialogueId,goBack}) {
+  const d=DIALOGUES.find(d=>d.id===dialogueId)||DIALOGUES[0];
+  const [showKo,setShowKo]=useState(false);
+  const spC={G:"#6366f1",B:"#0ea5e9",W:"#ec4899"};
+  const spN={G:"소녀",B:"소년",W:"여자"};
+  return <div>
+    <Header title={`${d.icon} ${d.title}`} onBack={goBack}/>
+    <div style={{padding:14}}>
+      <button onClick={()=>setShowKo(!showKo)} style={{...btnStyle(showKo?C.secondary+"22":"#f0f4f8",showKo?C.secondary:C.muted),marginBottom:10,padding:"7px 14px",fontSize:12}}>
+        {showKo?"🙈 해석 숨기기":"👁 해석 보기"}
+      </button>
+      {d.lines.map((l,i)=>(
+        <div key={i} style={{background:C.card,borderRadius:12,padding:"12px 14px",marginBottom:8,borderLeft:`4px solid ${spC[l.sp]||"#94a3b8"}`,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+          <div style={{fontSize:11,fontWeight:800,color:spC[l.sp]||"#94a3b8",marginBottom:3}}>{spN[l.sp]||l.sp}</div>
+          <div style={{fontSize:14,lineHeight:1.6}}>{l.en}</div>
+          {showKo&&<div style={{fontSize:12,color:C.muted,marginTop:4,paddingTop:4,borderTop:"1px solid #f1f5f9"}}>{l.ko}</div>}
+        </div>
+      ))}
+      <Card style={{background:"#eff6ff",border:"1px solid #bfdbfe"}}>
+        <div style={{fontWeight:700,fontSize:12,color:C.secondary,marginBottom:6}}>⭐ 핵심 표현</div>
+        {d.keyExpr.map((e,i)=><div key={i} style={{fontSize:12,lineHeight:1.8}}>• {e}</div>)}
+      </Card>
+    </div>
+  </div>;
+}
+
+function DialogueTF({dialogueId,goBack,updateProgress}) {
+  const d=DIALOGUES.find(d=>d.id===dialogueId)||DIALOGUES[0];
+  const [idx,setIdx]=useState(0);
+  const [answers,setAnswers]=useState({});
+  const [done,setDone]=useState(false);
+  const answer=(choice)=>{if(answers[idx]!==undefined)return;setAnswers(p=>({...p,[idx]:choice}));};
+  const next=()=>{if(idx+1>=d.tf.length){const s=Object.values(answers).filter((a,i)=>a===d.tf[i].a).length;updateProgress("dialogue",s,d.tf.length);setDone(true);}else setIdx(i=>i+1);};
+  const retry=()=>{setIdx(0);setAnswers({});setDone(false);};
+  const score=Object.entries(answers).filter(([i,a])=>a===d.tf[Number(i)].a).length;
+  if(done)return <div><Header title="✅ T/F 문제" onBack={goBack}/><QuizResult score={score} total={d.tf.length} onRetry={retry} onHome={goBack}/></div>;
+  const q=d.tf[idx];
+  const answered=answers[idx]!==undefined;
+  const isCorrect=answers[idx]===q.a;
+  return <div>
+    <Header title={`${d.icon} T/F`} onBack={goBack} right={`${idx+1}/${d.tf.length}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={idx} max={d.tf.length}/>
+      <Card style={{marginTop:12}}>
+        <div style={{fontSize:11,color:C.muted,marginBottom:10}}>대화 내용과 일치하면 T, 틀리면 F</div>
+        <div style={{background:"#f8fafc",borderRadius:12,padding:14,fontSize:14,fontWeight:600,lineHeight:1.7,marginBottom:16}}>{q.q}</div>
+        <div style={{display:"flex",gap:12}}>
+          {[true,false].map(val=>{
+            let style_={background:"#f8fafc",border:"2px solid #e2e8f0",color:C.muted};
+            if(!answered)style_={background:val?"#dcfce7":"#fee2e2",border:val?`2px solid ${C.success}`:`2px solid ${C.error}`,color:val?"#065f46":"#991b1b"};
+            else if(answers[idx]===val)style_={background:val?"#dcfce7":"#fee2e2",border:val?`2px solid ${C.success}`:`2px solid ${C.error}`,color:val?"#065f46":"#991b1b"};
+            return <button key={String(val)} onClick={()=>answer(val)} disabled={answered}
+              style={{...style_,flex:1,borderRadius:12,padding:16,fontSize:20,fontWeight:900,cursor:answered?"default":"pointer"}}>{val?"T":"F"}</button>;
+          })}
+        </div>
+        {answered&&<div style={{marginTop:10,padding:"10px 14px",background:isCorrect?"#d1fae5":"#fee2e2",borderRadius:12,borderLeft:`4px solid ${isCorrect?C.success:C.error}`,fontSize:13}}>
+          {isCorrect?"✅ 정답입니다!":"❌ 오답. 정답: "+(q.a?"T":"F")}
+        </div>}
+      </Card>
+      {answered&&<button onClick={next} style={{...btnStyle(C.secondary,"#fff"),width:"100%",marginTop:4}}>{idx+1>=d.tf.length?"결과 보기":"다음 ›"}</button>}
+    </div>
+  </div>;
+}
+
+function DialogueOrder({dialogueId,goBack,updateProgress}) {
+  const d=DIALOGUES.find(d=>d.id===dialogueId)||DIALOGUES[0];
+  const lines5=d.lines.slice(0,Math.min(5,d.lines.length));
+  const [items,setItems]=useState(()=>shuffle(lines5.map((l,i)=>({...l,origIdx:i}))));
+  const [checked,setChecked]=useState(false);
+  const spC={G:"#6366f1",B:"#0ea5e9",W:"#ec4899"};
+  const spN={G:"소녀",B:"소년",W:"여자"};
+  const move=(i,dir)=>{const arr=[...items];const j=i+dir;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];setItems(arr);};
+  const check=()=>{const ok=items.every((item,i)=>item.origIdx===i);setChecked(true);updateProgress("dialogue",ok?1:0,1);};
+  const retry=()=>{setItems(shuffle(lines5.map((l,i)=>({...l,origIdx:i}))));setChecked(false);};
+  const allOk=items.every((item,i)=>item.origIdx===i);
+  return <div>
+    <Header title={`${d.icon} 순서 배열`} onBack={goBack}/>
+    <div style={{padding:14}}>
+      <div style={{background:"#eff6ff",borderRadius:12,padding:"10px 14px",marginBottom:8,fontSize:12,color:C.secondary,fontWeight:600}}>📌 올바른 순서로 배열하세요. ↑↓ 버튼으로 이동</div>
+      {items.map((l,i)=>{
+        const ok=checked&&l.origIdx===i;
+        const no=checked&&l.origIdx!==i;
+        return <div key={l.en} style={{background:C.card,borderRadius:12,padding:"10px 12px",marginBottom:8,borderLeft:`4px solid ${ok?C.success:no?C.error:spC[l.sp]||"#94a3b8"}`,boxShadow:"0 1px 6px rgba(0,0,0,.06)",display:"flex",alignItems:"center",gap:10}}>
+          <div style={{fontSize:18,fontWeight:900,color:C.muted,minWidth:22}}>{i+1}</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:10,fontWeight:800,color:spC[l.sp]||"#94a3b8"}}>{spN[l.sp]||l.sp}</div>
+            <div style={{fontSize:12,lineHeight:1.5,marginTop:2}}>{l.en}</div>
+          </div>
+          {!checked&&<div style={{display:"flex",flexDirection:"column",gap:4}}>
+            <button onClick={()=>move(i,-1)} disabled={i===0} style={{border:"none",background:"#f0f4f8",borderRadius:6,padding:"3px 8px",cursor:"pointer",fontSize:12}}>▲</button>
+            <button onClick={()=>move(i,1)} disabled={i===items.length-1} style={{border:"none",background:"#f0f4f8",borderRadius:6,padding:"3px 8px",cursor:"pointer",fontSize:12}}>▼</button>
+          </div>}
+          {checked&&<span style={{fontSize:18}}>{ok?"✅":"❌"}</span>}
+        </div>;
+      })}
+      {!checked?<button onClick={check} style={{...btnStyle(C.primary,"#fff"),width:"100%",marginTop:4}}>정답 확인</button>:
+      <div>
+        <Card style={{textAlign:"center",background:allOk?"#d1fae5":"#fee2e2",margin:"10px 0"}}>
+          <div style={{fontSize:22}}>{allOk?"🎉":"🔄"}</div>
+          <div style={{fontWeight:700,color:allOk?C.success:C.error,marginTop:4}}>{allOk?"완벽한 순서예요!":"순서가 맞지 않아요."}</div>
+        </Card>
+        <div style={{display:"flex",gap:10}}>
+          <button onClick={retry} style={{...btnStyle(C.accent,"#fff"),flex:1}}>🔄 다시</button>
+          <button onClick={goBack} style={{...btnStyle(C.primary,"#fff"),flex:1}}>‹ 메뉴</button>
+        </div>
+      </div>}
+    </div>
+  </div>;
+}
+
+function DialogueBlank({dialogueId,goBack,updateProgress}) {
+  const d=DIALOGUES.find(d=>d.id===dialogueId)||DIALOGUES[0];
+  const b=d.blank;
+  const [input,setInput]=useState("");
+  const [answered,setAnswered]=useState(false);
+  const isCorrect=input.trim().toLowerCase()===b.answer.toLowerCase();
+  const spC={G:"#6366f1",B:"#0ea5e9",W:"#ec4899"};
+  const spN={G:"소녀",B:"소년",W:"여자"};
+  return <div>
+    <Header title={`${d.icon} 빈칸 채우기`} onBack={goBack}/>
+    <div style={{padding:14}}>
+      <div style={{background:"#eff6ff",borderRadius:12,padding:"10px 14px",marginBottom:4,fontSize:12,color:C.secondary,fontWeight:600}}>힌트: {b.hint}</div>
+      <Card>
+        <div style={{fontSize:11,color:C.muted,marginBottom:10}}>빈칸에 알맞은 말을 쓰시오.</div>
+        <div style={{background:"#f8fafc",borderRadius:12,padding:14,fontSize:14,lineHeight:1.8,marginBottom:14}}>
+          <span style={{fontWeight:800,color:spC[d.lines[b.line].sp]}}>{spN[d.lines[b.line].sp]}: </span>
+          {b.sentence.replace(b.answer,"_____")}
+        </div>
+        <input value={input} onChange={e=>setInput(e.target.value)} disabled={answered}
+          placeholder="정답을 입력하세요..."
+          style={{width:"100%",padding:"11px 14px",borderRadius:12,border:`2px solid ${answered?isCorrect?C.success:C.error:"#e2e8f0"}`,fontSize:14,outline:"none",background:answered?isCorrect?"#d1fae5":"#fee2e2":"#fff",boxSizing:"border-box",marginBottom:10}}/>
+        {!answered?<button onClick={()=>{setAnswered(true);updateProgress("dialogue",isCorrect?1:0,1);}} disabled={!input.trim()}
+          style={{...btnStyle(input.trim()?C.primary:"#e2e8f0",input.trim()?"#fff":C.muted),width:"100%"}}>제출</button>:
+        <div style={{padding:"10px 14px",background:isCorrect?"#d1fae5":"#fee2e2",borderRadius:12,borderLeft:`4px solid ${isCorrect?C.success:C.error}`,fontSize:13}}>
+          {isCorrect?"✅ 정답입니다!":"❌ 오답. 정답: "+b.answer}
+        </div>}
+      </Card>
+      {answered&&<Card style={{background:"#fffbeb"}}>
+        <div style={{fontSize:11,fontWeight:700,color:C.accent,marginBottom:6}}>📖 전체 문장</div>
+        <div style={{fontSize:13,lineHeight:1.7}}>{b.sentence}</div>
+        <div style={{fontSize:12,color:C.muted,marginTop:4}}>{d.lines[b.line].ko}</div>
+      </Card>}
+    </div>
+  </div>;
+}
+
+function GrammarMenu({goTo,goBack}) {
+  return <div>
+    <Header title="⚡ 문법 학습" onBack={goBack}/>
+    <div style={{padding:14}}>
+      {GRAMMAR_NOTES.map(g=>(
+        <button key={g.id} onClick={()=>goTo(`gs_${g.id}`)} style={{...btnStyle(C.card,C.text),width:"100%",justifyContent:"flex-start",gap:14,marginBottom:10,padding:"16px 16px",boxShadow:"0 2px 8px rgba(0,0,0,.07)",borderRadius:14,borderLeft:`5px solid ${g.color}`}}>
+          <span style={{fontSize:26}}>{g.icon}</span>
+          <div style={{textAlign:"left",flex:1}}><div style={{fontWeight:700,fontSize:14}}>{g.title}</div><div style={{color:C.muted,fontSize:11,marginTop:2}}>{g.summary.substring(0,42)}...</div></div>
+          <span style={{color:C.muted}}>›</span>
+        </button>
+      ))}
+      <button onClick={()=>goTo("grammar_quiz")} style={{...btnStyle(C.primary,"#fff"),width:"100%",marginTop:4,padding:14,fontSize:15}}>⚡ 문법 퀴즈 풀기</button>
+    </div>
+  </div>;
+}
+
+function GrammarStudy({noteId,goBack}) {
+  const g=GRAMMAR_NOTES.find(n=>n.id===noteId)||GRAMMAR_NOTES[0];
+  const [expanded,setExpanded]=useState(null);
+  return <div>
+    <div style={{background:`linear-gradient(135deg,${g.color},${g.color}cc)`,color:"#fff",padding:"14px 16px",display:"flex",alignItems:"center",gap:10}}>
+      <button onClick={goBack} style={{background:"none",border:"none",color:"#fff",cursor:"pointer",fontSize:22}}>‹</button>
+      <span style={{flex:1,fontWeight:800,fontSize:16}}>{g.icon} {g.title}</span>
+    </div>
+    <div style={{padding:14}}>
+      <Card style={{background:`${g.color}11`,border:`1px solid ${g.color}44`}}>
+        <div style={{fontSize:13,fontWeight:700,color:g.color,marginBottom:6}}>📌 핵심 정리</div>
+        <div style={{fontSize:13,lineHeight:1.7}}>{g.summary}</div>
+      </Card>
+      {g.points.map((p,i)=>(
+        <div key={i} style={{background:C.card,borderRadius:14,margin:"8px 0",overflow:"hidden",boxShadow:"0 1px 6px rgba(0,0,0,.07)"}}>
+          <button onClick={()=>setExpanded(expanded===i?null:i)} style={{width:"100%",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",textAlign:"left"}}>
+            <span style={{fontWeight:700,fontSize:13}}>{p.label}</span>
+            <span style={{transform:expanded===i?"rotate(90deg)":"none",transition:"transform .2s",fontSize:16,color:C.muted}}>›</span>
+          </button>
+          {expanded===i&&<div style={{padding:"0 16px 14px"}}>
+            <div style={{background:"#f0f4f8",borderRadius:10,padding:"10px 12px",fontSize:12,fontFamily:"monospace",lineHeight:1.8,whiteSpace:"pre-line",marginBottom:6}}>{p.en}</div>
+            <div style={{fontSize:12,color:C.muted,lineHeight:1.7}}>{p.ko}</div>
+          </div>}
+        </div>
+      ))}
+    </div>
+  </div>;
+}
+
+function GrammarQuiz({goBack,updateProgress}) {
+  const [diff,setDiff]=useState(null);
+  const [pool]=useState(()=>shuffle(GRAMMAR_QS));
+  const [qIdx,setQIdx]=useState(0);
+  const [sel,setSel]=useState(null);
+  const [ans,setAns]=useState(false);
+  const [score,setScore]=useState(0);
+  const [cnt,setCnt]=useState(0);
+  const [done,setDone]=useState(false);
+  const T=8;
+  const filtered=diff?pool.filter(q=>q.diff===diff):pool;
+  const q=filtered[qIdx%filtered.length];
+  const pick=(i)=>{if(ans)return;setSel(i);setAns(true);if(i===q.ans)setScore(s=>s+1);setCnt(c=>c+1);};
+  const next=()=>{if(cnt>=T){setDone(true);updateProgress("grammar",score,T);return;}setQIdx(i=>i+1);setSel(null);setAns(false);};
+  const retry=()=>{setScore(0);setCnt(0);setDone(false);setQIdx(0);setSel(null);setAns(false);setDiff(null);};
+  if(!diff)return <div>
+    <Header title="⚡ 문법 퀴즈" onBack={goBack}/>
+    <div style={{padding:14}}>
+      <Card style={{textAlign:"center",padding:28}}>
+        <div style={{fontSize:15,fontWeight:700,marginBottom:18}}>난이도를 선택하세요</div>
+        {["전체","기본","발전","심화"].map(d=>{
+          const c=d==="기본"?C.success:d==="발전"?C.accent:d==="심화"?C.error:C.primary;
+          return <button key={d} onClick={()=>setDiff(d==="전체"?null:d)} style={{...btnStyle(c,"#fff"),width:"100%",marginBottom:10,fontSize:15}}>{d}</button>;
+        })}
+      </Card>
+    </div>
+  </div>;
+  if(done)return <div><Header title="⚡ 문법 퀴즈" onBack={goBack}/><QuizResult score={score} total={T} onRetry={retry} onHome={goBack}/></div>;
+  return <div>
+    <Header title="⚡ 문법 퀴즈" onBack={goBack} right={`${cnt+1}/${T}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={cnt} max={T}/>
+      <div style={{display:"flex",gap:6,margin:"8px 0"}}>
+        <Tag label={q.diff} color={q.diff==="기본"?C.success:q.diff==="발전"?C.accent:C.error}/>
+        <Tag label={q.topic} color={C.secondary}/>
       </div>
+      <Card><MCQ question={q.q} opts={q.opts} selected={sel} onSelect={pick} answered={ans} correct={q.ans} explanation={q.exp}/></Card>
+      {ans&&<button onClick={next} style={{...btnStyle(C.secondary,"#fff"),width:"100%",marginTop:4}}>{cnt+1>=T?"결과 보기":"다음 ›"}</button>}
     </div>
-    <span class="arrow">›</span>
-  </div>
+  </div>;
+}
 
-  <div style="margin-top:8px;margin-bottom:12px;" class="section-label">의사소통 기능 핵심 표현</div>
-
-  <div class="key-expr">
-    <div class="key-expr-title">희망 표현하기</div>
-    <div class="key-expr-list">
-      · <span>I hope you do your best.</span><br>
-      · I hope you finish the race.<br>
-      · I hope you have a great time.
+function ReadingStudy({goBack}) {
+  const [showKo,setShowKo]=useState(false);
+  const [hl,setHl]=useState(null);
+  const sections=[
+    {title:"🎤 David의 소개",range:[0,3]},
+    {title:"🌱 어린 시절",range:[3,8]},
+    {title:"💼 엔지니어 시절",range:[8,9]},
+    {title:"🌌 아이슬란드 여행",range:[9,13]},
+    {title:"📸 꿈의 발견",range:[13,22]},
+    {title:"💡 David의 조언",range:[22,26]},
+  ];
+  return <div>
+    <Header title="📖 본문 읽기" onBack={goBack}/>
+    <div style={{padding:14}}>
+      <div style={{display:"flex",justifyContent:"flex-end",marginBottom:10}}>
+        <button onClick={()=>setShowKo(!showKo)} style={{...btnStyle(showKo?C.secondary+"22":"#f0f4f8",showKo?C.secondary:C.muted),padding:"6px 12px",fontSize:12}}>
+          {showKo?"🙈 한글 숨기기":"👁 한글 보기"}
+        </button>
+      </div>
+      {sections.map((sec,si)=>(
+        <div key={si} style={{marginBottom:10,borderRadius:14,overflow:"hidden",boxShadow:"0 2px 8px rgba(0,0,0,.07)"}}>
+          <div style={{background:C.primary,padding:"9px 14px",fontSize:12,fontWeight:700,color:"#fff"}}>{sec.title}</div>
+          <div style={{background:C.card,padding:"10px 14px"}}>
+            {READING.slice(sec.range[0],sec.range[1]).map((r,i)=>(
+              <div key={r.id} onClick={()=>setHl(hl===r.id?null:r.id)}
+                style={{padding:"7px 4px",borderBottom:i<sec.range[1]-sec.range[0]-1?"1px solid #f1f5f9":"none",cursor:"pointer",background:hl===r.id?"#eff6ff":"transparent",borderRadius:6,paddingLeft:hl===r.id?8:4}}>
+                <div style={{fontSize:13,lineHeight:1.7}}>{r.en}</div>
+                {(showKo||hl===r.id)&&<div style={{fontSize:12,color:C.muted,marginTop:2,lineHeight:1.6}}>{r.ko}</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
-  </div>
+  </div>;
+}
 
-  <div class="key-expr">
-    <div class="key-expr-title">안심시키기</div>
-    <div class="key-expr-list">
-      · <span>Don't worry. You'll do all right.</span><br>
-      · You'll be okay. / Cheer up!<br>
-      · Things will get better.
+function ReadingQuiz({goBack,updateProgress}) {
+  const [pool]=useState(()=>shuffle(COMPREHENSION));
+  const [diff,setDiff]=useState(null);
+  const [qIdx,setQIdx]=useState(0);
+  const [sel,setSel]=useState(null);
+  const [ans,setAns]=useState(false);
+  const [score,setScore]=useState(0);
+  const [cnt,setCnt]=useState(0);
+  const [done,setDone]=useState(false);
+  const T=6;
+  const filtered=diff?pool.filter(q=>q.diff===diff):pool;
+  const q=filtered[qIdx%filtered.length];
+  const pick=(i)=>{if(ans)return;setSel(i);setAns(true);if(i===q.ans)setScore(s=>s+1);setCnt(c=>c+1);};
+  const next=()=>{if(cnt>=T){setDone(true);updateProgress("reading",score,T);return;}setQIdx(i=>i+1);setSel(null);setAns(false);};
+  const retry=()=>{setScore(0);setCnt(0);setDone(false);setQIdx(0);setSel(null);setAns(false);setDiff(null);};
+  if(!diff)return <div>
+    <Header title="📖 독해 퀴즈" onBack={goBack}/>
+    <div style={{padding:14}}>
+      <Card style={{textAlign:"center",padding:28}}>
+        <div style={{fontSize:15,fontWeight:700,marginBottom:18}}>난이도를 선택하세요</div>
+        {["전체","기본","발전","심화"].map(d=>{
+          const c=d==="기본"?C.success:d==="발전"?C.accent:d==="심화"?C.error:C.primary;
+          return <button key={d} onClick={()=>setDiff(d==="전체"?null:d)} style={{...btnStyle(c,"#fff"),width:"100%",marginBottom:10,fontSize:15}}>{d}</button>;
+        })}
+      </Card>
     </div>
-  </div>
-
-  <div class="key-expr">
-    <div class="key-expr-title">언어 형식</div>
-    <div class="key-expr-list">
-      · I had many chances <span>to see</span> dolphins.<br>
-      · The ceremony <span>made us emotional</span>.
+  </div>;
+  if(done)return <div><Header title="📖 독해 퀴즈" onBack={goBack}/><QuizResult score={score} total={T} onRetry={retry} onHome={goBack}/></div>;
+  return <div>
+    <Header title="📖 독해 퀴즈" onBack={goBack} right={`${cnt+1}/${T}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={cnt} max={T}/>
+      <div style={{margin:"8px 0"}}><Tag label={q.diff} color={q.diff==="기본"?C.success:q.diff==="발전"?C.accent:C.error}/></div>
+      <Card><MCQ question={q.q} opts={q.opts} selected={sel} onSelect={pick} answered={ans} correct={q.ans} explanation={q.exp}/></Card>
+      {ans&&<button onClick={next} style={{...btnStyle(C.secondary,"#fff"),width:"100%",marginTop:4}}>{cnt+1>=T?"결과 보기":"다음 ›"}</button>}
     </div>
-  </div>
+  </div>;
+}
 
-</div>
+function MasterQuiz({goBack,updateProgress}) {
+  const [diff,setDiff]=useState(null);
+  const T=12;
+  const [pool,setPool]=useState(null);
+  const [qIdx,setQIdx]=useState(0);
+  const [sel,setSel]=useState(null);
+  const [ans,setAns]=useState(false);
+  const [score,setScore]=useState(0);
+  const [cnt,setCnt]=useState(0);
+  const [done,setDone]=useState(false);
+  const start=(d)=>{
+    const gqs=d&&d!=="전체"?GRAMMAR_QS.filter(q=>q.diff===d):GRAMMAR_QS;
+    const cqs=d&&d!=="전체"?COMPREHENSION.filter(q=>q.diff===d):COMPREHENSION;
+    setPool(shuffle([...shuffle(gqs).slice(0,6),...shuffle(cqs).slice(0,6)]).slice(0,T));
+    setDiff(d);
+  };
+  const q=pool?pool[qIdx]:null;
+  const pick=(i)=>{if(ans||!q)return;setSel(i);setAns(true);if(i===q.ans)setScore(s=>s+1);setCnt(c=>c+1);};
+  const next=()=>{if(cnt>=T||qIdx>=pool.length-1){setDone(true);updateProgress("master",score,T);return;}setQIdx(i=>i+1);setSel(null);setAns(false);};
+  const retry=()=>{setScore(0);setCnt(0);setDone(false);setQIdx(0);setSel(null);setAns(false);setDiff(null);setPool(null);};
+  if(!diff)return <div>
+    <Header title="🏆 종합 퀴즈" onBack={goBack}/>
+    <div style={{padding:14}}>
+      <Card style={{background:"#fffbeb",border:`1px solid ${C.accent}44`,marginBottom:12}}>
+        <div style={{fontWeight:700,color:C.accent,marginBottom:6}}>📝 안내</div>
+        <div style={{fontSize:12,lineHeight:1.8}}>문법 + 독해 문제 혼합 출제 · 총 {T}문제</div>
+      </Card>
+      {["전체","기본","발전","심화"].map(d=>{
+        const c=d==="기본"?C.success:d==="발전"?C.accent:d==="심화"?C.error:C.primary;
+        return <button key={d} onClick={()=>start(d)} style={{...btnStyle(c,"#fff"),width:"100%",marginBottom:10,fontSize:15}}>{d} 난이도</button>;
+      })}
+    </div>
+  </div>;
+  if(done)return <div><Header title="🏆 종합 퀴즈" onBack={goBack}/><QuizResult score={score} total={T} onRetry={retry} onHome={goBack}/></div>;
+  if(!q)return null;
+  const isG=GRAMMAR_QS.some(g=>g.id===q.id);
+  return <div>
+    <Header title={`🏆 종합 [${diff}]`} onBack={goBack} right={`${cnt+1}/${T}`}/>
+    <div style={{padding:14}}>
+      <ProgressBar val={cnt} max={T}/>
+      <div style={{display:"flex",gap:6,margin:"8px 0"}}>
+        <Tag label={q.diff} color={q.diff==="기본"?C.success:q.diff==="발전"?C.accent:C.error}/>
+        <Tag label={isG?"문법":"독해"} color={isG?C.accent:C.secondary}/>
+      </div>
+      <Card><MCQ question={q.q} opts={q.opts} selected={sel} onSelect={pick} answered={ans} correct={q.ans} explanation={q.exp}/></Card>
+      {ans&&<button onClick={next} style={{...btnStyle(C.secondary,"#fff"),width:"100%",marginTop:4}}>{cnt+1>=T||qIdx>=pool.length-1?"결과 보기":"다음 ›"}</button>}
+    </div>
+  </div>;
+}
 
+function MyRecord({goBack,progress}) {
+  const cats=[
+    {key:"vocab",label:"어휘",icon:"📚",color:"#6366f1"},
+    {key:"grammar",label:"문법",icon:"⚡",color:C.accent},
+    {key:"reading",label:"독해",icon:"📖",color:"#ec4899"},
+    {key:"dialogue",label:"대화문",icon:"🗣️",color:C.success},
+    {key:"master",label:"종합",icon:"🏆",color:C.error},
+  ];
+  const total=cats.reduce((a,c)=>(progress[c.key]||{total:0}).total+a,0);
+  const totalScore=cats.reduce((a,c)=>(progress[c.key]||{score:0}).score+a,0);
+  const overall=total>0?Math.round(totalScore/total*100):0;
+  return <div>
+    <Header title="📊 내 기록" onBack={goBack}/>
+    <div style={{padding:14}}>
+      <div style={{background:`linear-gradient(135deg,${C.primary},#2563eb)`,borderRadius:16,padding:24,textAlign:"center",color:"#fff",marginBottom:10}}>
+        <div style={{fontSize:11,opacity:.8}}>전체 정답률</div>
+        <div style={{fontSize:48,fontWeight:900}}>{overall}%</div>
+        <div style={{fontSize:12,opacity:.8}}>총 {total}문항 · 정답 {totalScore}</div>
+      </div>
+      {cats.map(c=>{
+        const p=progress[c.key]||{score:0,total:0,best:0};
+        const pct=p.total>0?Math.round(p.score/p.total*100):0;
+        return <Card key={c.key} style={{margin:"8px 0"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+            <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:18}}>{c.icon}</span><span style={{fontWeight:700,fontSize:14}}>{c.label}</span></div>
+            <span style={{fontWeight:800,color:c.color,fontSize:16}}>{pct}%</span>
+          </div>
+          <ProgressBar val={p.score} max={p.total||1} color={c.color}/>
+          <div style={{display:"flex",justifyContent:"space-between",marginTop:5,fontSize:11,color:C.muted}}>
+            <span>{p.total}문항</span><span>최고 {p.best||0}%</span>
+          </div>
+        </Card>;
+      })}
+    </div>
+  </div>;
+}
+
+function App() {
+  const [screen,setScreen]=useState("home");
+  const [stack,setStack]=useState([]);
+  const [progress,setProgress]=useState({vocab:{score:0,total:0,best:0},grammar:{score:0,total:0,best:0},reading:{score:0,total:0,best:0},dialogue:{score:0,total:0,best:0},master:{score:0,total:0,best:0}});
+
+  useEffect(()=>{
+    const r=storage.get("lesson01_progress");
+    if(r)try{setProgress(JSON.parse(r.value));}catch(e){}
+  },[]);
+
+  const updateProgress=useCallback((cat,score,total)=>{
+    setProgress(prev=>{
+      const p=prev[cat]||{score:0,total:0,best:0};
+      const pct=total>0?Math.round(score/total*100):0;
+      const next={...prev,[cat]:{score:p.score+score,total:p.total+total,best:Math.max(p.best||0,pct)}};
+      storage.set("lesson01_progress",JSON.stringify(next));
+      return next;
+    });
+  },[]);
+
+  const goTo=(s)=>{setStack(p=>[...p,screen]);setScreen(s);};
+  const goBack=()=>{if(stack.length>0){setScreen(stack[stack.length-1]);setStack(s=>s.slice(0,-1));}else setScreen("home");};
+
+  const render=()=>{
+    if(screen==="home")return <Home goTo={goTo} progress={progress}/>;
+    if(screen==="vocab_menu")return <VocabMenu goTo={goTo} goBack={goBack}/>;
+    if(screen==="vocab_flash")return <VocabFlash goBack={goBack}/>;
+    if(screen==="vocab_quiz"||screen==="vocab_match")return <VocabQuiz goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen==="phrase_menu")return <PhraseMenu goBack={goBack}/>;
+    if(screen==="dialogue_menu")return <DialogueMenu goTo={goTo} goBack={goBack}/>;
+    if(screen.startsWith("dv_"))return <DialogueView dialogueId={parseInt(screen.split("_")[1])||1} goBack={goBack}/>;
+    if(screen.startsWith("dtf_"))return <DialogueTF dialogueId={parseInt(screen.split("_")[1])||1} goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen.startsWith("dord_"))return <DialogueOrder dialogueId={parseInt(screen.split("_")[1])||1} goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen.startsWith("dblank_"))return <DialogueBlank dialogueId={parseInt(screen.split("_")[1])||1} goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen==="grammar_menu")return <GrammarMenu goTo={goTo} goBack={goBack}/>;
+    if(screen.startsWith("gs_"))return <GrammarStudy noteId={screen.replace("gs_","")} goBack={goBack}/>;
+    if(screen==="grammar_quiz")return <GrammarQuiz goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen==="reading_menu")return <div>
+      <Header title="📖 본문 학습" onBack={goBack}/>
+      <div style={{padding:14}}>
+        {[{id:"reading_study",icon:"📄",label:"본문 읽기",desc:"본문 읽고 해석 확인"},{id:"reading_quiz",icon:"❓",label:"독해 퀴즈",desc:"내용 이해 문제 풀기"}].map(m=>(
+          <button key={m.id} onClick={()=>goTo(m.id)} style={{...btnStyle(C.card,C.text),width:"100%",justifyContent:"flex-start",gap:14,marginBottom:10,padding:"16px 18px",boxShadow:"0 2px 8px rgba(0,0,0,.07)",borderRadius:14}}>
+            <span style={{fontSize:28}}>{m.icon}</span>
+            <div style={{textAlign:"left"}}><div style={{fontWeight:700,fontSize:14}}>{m.label}</div><div style={{color:C.muted,fontSize:12}}>{m.desc}</div></div>
+            <span style={{marginLeft:"auto",color:C.muted}}>›</span>
+          </button>
+        ))}
+      </div>
+    </div>;
+    if(screen==="reading_study")return <ReadingStudy goBack={goBack}/>;
+    if(screen==="reading_quiz")return <ReadingQuiz goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen==="master_quiz")return <MasterQuiz goBack={goBack} updateProgress={updateProgress}/>;
+    if(screen==="my_record")return <MyRecord goBack={goBack} progress={progress}/>;
+    return <Home goTo={goTo} progress={progress}/>;
+  };
+
+  const navItems=[
+    {s:"home",icon:"🏠",label:"홈"},
+    {s:"vocab_menu",icon:"📚",label:"어휘"},
+    {s:"dialogue_menu",icon:"🗣️",label:"대화"},
+    {s:"grammar_menu",icon:"⚡",label:"문법"},
+    {s:"master_quiz",icon:"🏆",label:"퀴즈"},
+  ];
+
+  return <div style={{maxWidth:480,margin:"0 auto",minHeight:"100vh",background:C.bg,fontFamily:"'Apple SD Gothic Neo','Malgun Gothic',sans-serif"}}>
+    <div style={{paddingBottom:80}}>{render()}</div>
+    <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,background:"#fff",borderTop:"1px solid #e2e8f0",display:"flex",zIndex:100}}>
+      {navItems.map(n=>(
+        <button key={n.s} onClick={()=>{setStack([]);setScreen(n.s);}}
+          style={{flex:1,padding:"9px 4px 13px",background:screen===n.s?"#eff6ff":"none",border:"none",cursor:"pointer",borderTop:screen===n.s?`2px solid ${C.secondary}`:"2px solid transparent"}}>
+          <div style={{fontSize:17}}>{n.icon}</div>
+          <div style={{fontSize:10,fontWeight:700,color:screen===n.s?C.secondary:C.muted,marginTop:1}}>{n.label}</div>
+        </button>
+      ))}
+    </div>
+  </div>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
 </body>
 </html>
